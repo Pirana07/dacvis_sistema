@@ -20,32 +20,35 @@ void setup() {
 
 
 void loop() {
+  
     if (IrReceiver.decode()) {
-        int command = IrReceiver.decodedIRData.command;
+        int command = IrReceiver.decodedIRData.command;  // პულტის ღილაკები
 
-        if (command == 5) { // chartvis gilaki
+        if (command == 5) { // მოწმნდება დაეჭირა თუ არა ჩართვის ღილაკს
             gangashi = true;
             Serial.println("--chairto--");
-            digitalWrite(ledpin, LOW);  // gamoirtveba LED
+            digitalWrite(ledpin, LOW);  //გამოირთვება ლედი თუ ჩავრთავთ მოწყობილობას
 
-        } else if (command == 6) { // gamortvis gilaki
+        } else if (command == 6) { //  მოწმნდება დაეჭირა თუ არა გამორთვის ღილაკს
             gangashi = false;
-            digitalWrite(piezoPin, LOW); // piezos gamortva
-            digitalWrite(ledpin, HIGH);  // chairtveba LED
+            digitalWrite(piezoPin, LOW); // თუ გამოირთო პიეზო გამოირთვება
+            digitalWrite(ledpin, HIGH);  // თუ გამოირთო ლედი აინთება
             Serial.println("gangashi gamoirto, LED ainto");
         }
 
         IrReceiver.resume();
     }
 
-    // shevamowmot motion sensor da tu sawiroa gangashi chavrtot
+    // თუ მოწყობილობა ჩართულია:
     if (gangashi) {
+      //შევამოწმოთ motion sensor-იდან შემოსული ინმორმაცია
         bool mozraoba = digitalRead(mozraobapin);
+      //სენსორმა თუ დააფიქსირა რამე:
         if (mozraoba) {
-            digitalWrite(piezoPin, HIGH); // chairtveba piezo 
+            digitalWrite(piezoPin, HIGH); // ჩაირთვება piezo 
             Serial.println("mozraoba dafiqsirda, gangashi!");
         } else {
-            digitalWrite(piezoPin, LOW); // gamoirtveba piezo
+            digitalWrite(piezoPin, LOW); // თუარადა გამორთული დარჩება
         }
     }
 }
